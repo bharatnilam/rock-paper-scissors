@@ -1,54 +1,116 @@
-// let results = game();
+let gameCount = 0;
+let playerWins = 0;
+let computerWins = 0;
 
-// const counts = {};
-// results.forEach(function (x) { counts[x] = (counts[x] || 0) + 1; });
+const rockBtn = document.getElementById('rock');
+const paperBtn = document.getElementById('paper');
+const scissorsBtn = document.getElementById('scissors');
 
-// if (counts['player'] == counts['computer'])
-//     console.log("The match is drawn!");
-// else if (counts['player'] > counts['computer'])
-//     console.log("Player has won the match!");
-// else
-//     console.log("Computer has won the match!");
+rockBtn.addEventListener('click', function() {
+    if (isMatchEnd()) {
+        console.log('game has ended');
+        gameCount = 0;
+        playRound('rock');
+        gameCount++;
+    } else {
+        console.log('game continues');
+        console.log(gameCount);
+        playRound('rock');
+        gameCount++;
+    }
+});
 
-// console.log(counts);
+paperBtn.addEventListener('click', function() {
+    if (isMatchEnd()) {
+        console.log('game has ended');
+        gameCount = 0;
+    } else {
+        console.log('game continues');
+        console.log(gameCount);
+        playRound('paper');
+        gameCount++;
+    }
+});
 
-let btn = document.getElementById('rock');
-btn.addEventListener('click', playRound('rock'));
+scissorsBtn.addEventListener('click', function() {
+    if (isMatchEnd()) {
+        console.log('game has ended');
+        gameCount = 0;
+    } else {
+        console.log('game continues');
+        console.log(gameCount);
+        playRound('scissors');
+        gameCount++;
+    }
+});
 
-function game() {
-    let results = [];
-    // add player selection from button
-    // console.log("Player selection: " + playerSelection);
-    
-    console.log("Computer selection: " + computerSelection);
-    let result = playRound(playerSelection, computerSelection);
-    results.push(result);
-    if (result == "draw")
-        console.log("The game is a draw");
-    else
-        console.log(result + " wins!");
-    return results;
+function isMatchEnd() {
+    if (gameCount === 4) {
+        const winner = document.querySelector('#winner');
+
+        if (playerWins === computerWins)
+            winner.textContent = 'The game is a draw!';
+        else if (playerWins > computerWins)
+            winner.textContent = 'Player wins with ' + playerWins + ' points!';
+        else if (playerWins < computerWins)
+            winner.textContent = 'Computer wins ' + computerWins + ' points!';
+
+        playerWins = 0;
+        computerWins = 0;
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function playRound(playerSelection) {
     const computerSelection = getComputerChoice();
+    const roundStatus = document.querySelector('#round-status');
+    const roundStr = 'Player selected ' + playerSelection + ', and computer selected ' + computerSelection + '. ';
     if (playerSelection == computerSelection) {
-        return "draw";
+        roundStatus.textContent = roundStr + 'Round is a draw!';
+        updateScore('player');
     } else if (playerSelection == "rock") {
-        let result = (computerSelection == "scissors") ? "player" : "computer" ;
-        return result;
+        if (computerSelection == "scissors") {
+            roundStatus.textContent = roundStr + 'Player has won the round';
+            playerWins++;
+            updateScore('player');
+        } else {
+            roundStatus.textContent = roundStr + 'Computer has won the round';
+            computerWins++;
+            updateScore('computer');
+        }
     } else if (playerSelection == "paper") {
-        let result = (computerSelection == "rock") ? "player" : "computer" ;
-        return result
+        if (computerSelection == "rock") {
+            roundStatus.textContent = roundStr + 'Player has won the round';
+            playerWins++;
+            updateScore('player');
+        } else {
+            roundStatus.textContent = roundStr + 'Computer has won the round';
+            computerWins++;
+            updateScore('computer');
+        }
     } else {
-        let result = (computerSelection == "paper") ? "player" : "computer" ;
-        return result;
+        if (computerSelection == "paper") {
+            roundStatus.textContent = roundStr + 'Player has won the round';
+            playerWins++;
+            updateScore('player');
+        } else {
+            roundStatus.textContent = roundStr + 'Computer has won the round';
+            computerWins++;
+            updateScore('computer');
+        }
     }
 }
 
-function getComputerChoice() {
+function updateScore (result) {
+    const score = document.querySelector('#curr-score')
 
+    score.textContent = 'Player: ' + playerWins + ' - ' + computerWins + ' : Computer';
+}
+
+function getComputerChoice() {
     let choices = ["rock", "paper", "scissors"];
     return choices[(Math.floor(Math.random() * choices.length))]
-
 }
