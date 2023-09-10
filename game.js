@@ -1,4 +1,3 @@
-let gameCount = 0;
 let playerWins = 0;
 let computerWins = 0;
 
@@ -9,45 +8,36 @@ const scissorsBtn = document.getElementById('scissors');
 rockBtn.addEventListener('click', function() {
     if (isMatchEnd()) {
         console.log('game has ended');
-        gameCount = 0;
-        playRound('rock');
-        gameCount++;
     } else {
         console.log('game continues');
-        console.log(gameCount);
         playRound('rock');
-        gameCount++;
+        console.log(playerWins + ' ' + computerWins);
     }
 });
 
 paperBtn.addEventListener('click', function() {
     if (isMatchEnd()) {
         console.log('game has ended');
-        gameCount = 0;
     } else {
         console.log('game continues');
-        console.log(gameCount);
         playRound('paper');
-        gameCount++;
+        console.log(playerWins + ' ' + computerWins);
     }
 });
 
 scissorsBtn.addEventListener('click', function() {
     if (isMatchEnd()) {
         console.log('game has ended');
-        gameCount = 0;
     } else {
         console.log('game continues');
-        console.log(gameCount);
         playRound('scissors');
-        gameCount++;
+        console.log(playerWins + ' ' + computerWins);
     }
 });
 
 function isMatchEnd() {
-    if (gameCount === 4) {
-        const winner = document.querySelector('#winner');
-
+    const winner = document.querySelector('#winner');
+    if (playerWins === 5 || computerWins === 5) {
         if (playerWins === computerWins)
             winner.textContent = 'The game is a draw!';
         else if (playerWins > computerWins)
@@ -55,11 +45,16 @@ function isMatchEnd() {
         else if (playerWins < computerWins)
             winner.textContent = 'Computer wins ' + computerWins + ' points!';
 
+        
+        const score = document.querySelector('#score')
+        score.textContent = 'Player: ' + playerWins + ' - ' + computerWins + ' : Computer';
+        
         playerWins = 0;
         computerWins = 0;
 
         return true;
     } else {
+        winner.textContent = '';
         return false;
     }
 }
@@ -67,7 +62,7 @@ function isMatchEnd() {
 function playRound(playerSelection) {
     const computerSelection = getComputerChoice();
     const roundStatus = document.querySelector('#round-status');
-    const roundStr = 'Player selected ' + playerSelection + ', and computer selected ' + computerSelection + '. ';
+    const roundStr = 'Score: Player selected ' + playerSelection + ', and computer selected ' + computerSelection + '. ';
     if (playerSelection == computerSelection) {
         roundStatus.textContent = roundStr + 'Round is a draw!';
         updateScore('player');
@@ -102,11 +97,12 @@ function playRound(playerSelection) {
             updateScore('computer');
         }
     }
+    if (playerWins === 5 || computerWins === 5)
+        isMatchEnd();
 }
 
 function updateScore (result) {
-    const score = document.querySelector('#curr-score')
-
+    const score = document.querySelector('#score')
     score.textContent = 'Player: ' + playerWins + ' - ' + computerWins + ' : Computer';
 }
 
